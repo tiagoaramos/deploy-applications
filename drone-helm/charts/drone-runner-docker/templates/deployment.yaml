@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "drone-runner-docker.fullname" . }}
+  labels:
+    {{- include "drone-runner-docker.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "drone-runner-docker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "drone-runner-docker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "drone-runner-docker.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: dind
+          image: "{{ .Values.dind.repository }}:{{ .Values.dind.tag }}"
+          imagePullPolicy: {{ .Values.dind.pullPolicy }}
+          command: 
+          {{- range .Values.dind.command }}
+            - {{ . }}
+          {{- end }}
+          args:
+          {{- range .Values.dind.commandArgs }}
+            - {{ . }}
+          {{- end }}
+          {{- with .Values.dind.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+              - docker
+              - -H 
+              - tcp://localhost:2375
+              - images
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+              - docker
+              - -H 
+              - tcp://localhost:2375
+              - images
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          {{- with .Values.dind.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "drone-runner-docker.fullname" . }}
+          {{- range .Values.extraSecretNamesForEnvFrom }}
+            - secretRef:
+                name: {{ . }}
+          {{- end }}
+          env:
+            - name: DOCKER_HOST
+              value: {{ .Values.env.DOCKER_HOST }}
+            - name: DRONE_RUNNER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          ports:
+            - name: tcp
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: tcp
+          readinessProbe:
+            tcpSocket:
+              port: tcp
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml .Values.resources | nindent 10 }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

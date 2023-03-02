@@ -1,0 +1,9 @@
+apiVersion: v2
+name: uzi-helm-chart
+description: Meu helm chart
+
+type: application
+
+version: 0.6.1
+
+appVersion: 2.12.1

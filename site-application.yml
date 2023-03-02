@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: site-poc-uzi
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: uzi-space
+  project: default  
+  source:
+    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    path: site-helm
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  syncPolicy:
+    automated: 
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true

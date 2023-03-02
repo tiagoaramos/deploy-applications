@@ -1,0 +1,111 @@
+#######################################
+######    ARGO CD APPLICATION     #####
+#######################################
+#-------------------------------------#
+
+
+##############################
+########    SERVER    ########
+##############################
+
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: uzi-drone-poc
+  namespace: argocd
+  ### ATENCAO: o parametro finalizer abaixo deleta dodos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: drone-space
+  project: default  
+  source:
+    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    path: drone-helm/charts/drone
+    targetRevision: HEAD
+    helm:
+      #releaseName: drone-server
+      valueFiles:
+        - values.yaml
+  syncPolicy:   
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - PruneLast=true  
+
+
+---
+
+#############################
+########    RUNER    ########
+#############################
+
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: uzi-drone-runer-poc
+  namespace: argocd
+  ### ATENCAO: o parametro finalizer abaixo deleta dodos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: drone-space
+  project: default  
+  source:
+    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    path: drone-helm/charts/drone-runner-kube
+    targetRevision: HEAD
+    helm:
+      #SreleaseName: drone-runer    
+      valueFiles:
+        - values.yaml
+  syncPolicy:   
+    automated:
+      selfHeal: true
+      prune: true      
+
+---
+
+#############################
+########    secret    #######
+#############################
+
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: drone-kubernetes-secrets
+  namespace: argocd
+  ### ATENCAO: o parametro finalizer abaixo deleta dodos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: drone-space
+  project: default  
+  source:
+    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    path: drone-helm/charts/drone-kubernetes-secrets
+    targetRevision: HEAD
+    helm:
+      #SreleaseName: drone-runer    
+      valueFiles:
+        - values.yaml
+  syncPolicy:   
+    automated:
+      selfHeal: true
+      prune: true   
