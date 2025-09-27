@@ -69,7 +69,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: dominio_do_drone.com
+    - host: drone.appwebdiario.com.br
       paths:
         - path: /
           pathType: Prefix
@@ -183,7 +183,7 @@ env:
   ## REQUIRED: Set the user-visible Drone hostname, sans protocol.
   ## Ref: https://docs.drone.io/installation/reference/drone-server-host/
   ##
-  DRONE_SERVER_HOST: dominio_do_drone.com
+  DRONE_SERVER_HOST: drone.appwebdiario.com.br
   ## The protocol to pair with the value in DRONE_SERVER_HOST (http or https).
   ## Ref: https://docs.drone.io/installation/reference/drone-server-proto/
   ##
@@ -194,9 +194,9 @@ env:
   ## key via a separately provisioned secret (see existingSecretName above).
   ## Ref: https://docs.drone.io/installation/reference/drone-rpc-secret/
   ##
-  DRONE_RPC_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  #gerado no seu linux(no meu caso) a partir desse comando: openssl rand -hex 16
-  DRONE_USER_CREATE: username:seu_usuario_git,admin:true
-  DRONE_USER_FILTER: seu_usuario_git
+  DRONE_RPC_SECRET: 09aba6187d905f74987baaae38cff27b  #gerado no seu linux(no meu caso) a partir desse comando: openssl rand -hex 16
+  DRONE_USER_CREATE: username:tiagoaramos,admin:true
+  DRONE_USER_FILTER: tiagoaramos
 
   ## If you'd like to use a DB other than SQLite (the default), set a driver + DSN here.
   ## Ref: https://docs.drone.io/installation/storage/database/
@@ -227,9 +227,9 @@ env:
   ## GitHub-specific variables. See the provider docs here:
   ## Ref: https://docs.drone.io/installation/providers/github/
   ##
-  DRONE_GITHUB_CLIENT_ID: xxxxxxxxxxxxxxxxxxxx   #git ID gerado em: Settings > Developer settings  > OAuth Apps
+  DRONE_GITHUB_CLIENT_ID: Ov23liMmunkIfOfcGd9b   #git ID gerado em: Settings > Developer settings  > OAuth Apps
 
-  DRONE_GITHUB_CLIENT_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  #git secret gerado em: Settings > Developer settings  > OAuth Apps
+  DRONE_GITHUB_CLIENT_SECRET: a4568df90af0c46ec038b96489bf52747870ce37  #git secret gerado em: Settings > Developer settings  > OAuth Apps
 
   ## GitLab-specific variables. See the provider docs here:
   ## Ref: https://docs.drone.io/installation/providers/gitlab/

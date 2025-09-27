@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/ssl-verify: "off"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd.appwebdiario.com.br
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drone-ingress
+  namespace: drone-space
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: drone.appwebdiario.com.br
+    http:
+      paths:
+      - backend:
+          service:
+            name: uzi-drone-poc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
