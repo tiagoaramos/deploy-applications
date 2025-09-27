@@ -25,7 +25,7 @@ spec:
     namespace: drone-space
   project: default
   source:
-    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
     path: drone-helm/charts/drone
     targetRevision: HEAD
     helm:
@@ -63,7 +63,7 @@ spec:
     namespace: drone-space
   project: default
   source:
-    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
     path: drone-helm/charts/drone-runner-kube
     targetRevision: HEAD
     helm:
@@ -98,7 +98,7 @@ spec:
     namespace: drone-space
   project: default
   source:
-    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
     path: drone-helm/charts/drone-kubernetes-secrets
     targetRevision: HEAD
     helm:

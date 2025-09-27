@@ -12,16 +12,16 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: uzi-space
-  project: default  
+  project: default
   source:
-    repoURL: 'https://github.com/uzieljr/deploy-applications.git'
+    repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
     path: site-helm
     targetRevision: HEAD
     helm:
       valueFiles:
         - values.yaml
   syncPolicy:
-    automated: 
+    automated:
       prune: true
       selfHeal: true
       allowEmpty: true
