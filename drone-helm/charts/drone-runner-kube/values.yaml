@@ -140,3 +140,26 @@ env:
   ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-namespace-default/
   ##
   DRONE_NAMESPACE_DEFAULT: drone-space
+
+  ## Configure pods created by drone-runner-kube
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-pod-annotations/
+  ##
+  DRONE_POD_ANNOTATIONS: |
+    harbor-ca-cert: "harbor-ca-cert"
+
+  ## Configure imagePullSecrets for build pods
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-pod-spec/
+  ##
+  DRONE_POD_SPEC: |
+    imagePullSecrets:
+    - name: harbor-secret
+    volumes:
+    - name: harbor-ca-cert
+      configMap:
+        name: harbor-ca-cert
+    containers:
+    - volumeMounts:
+      - name: harbor-ca-cert
+        mountPath: /etc/ssl/certs/harbor-ca.crt
+        subPath: harbor-ca.crt
+        readOnly: true
