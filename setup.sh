@@ -15,3 +15,7 @@ docker network connect appwebdiario-network minikube
 kubectl apply -f argocd-application.yml
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+kubectl create namespace drone-space
+
+kubectl apply -f drone-application.yml
