@@ -157,9 +157,29 @@ env:
     - name: harbor-ca-cert
       configMap:
         name: harbor-ca-cert
+    - name: docker-daemon-config
+      configMap:
+        name: docker-daemon-config
     containers:
     - volumeMounts:
       - name: harbor-ca-cert
         mountPath: /etc/ssl/certs/harbor-ca.crt
         subPath: harbor-ca.crt
         readOnly: true
+      - name: docker-daemon-config
+        mountPath: /etc/docker/daemon.json
+        subPath: daemon.json
+        readOnly: true
+
+  ## Configure Docker insecure registries for Harbor
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-docker-config/
+  ##
+  DRONE_DOCKER_CONFIG: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"]
+    }
+
+  ## Configure Docker daemon settings
+  ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-docker-config-path/
+  ##
+  DRONE_DOCKER_CONFIG_PATH: /etc/docker/daemon.json
