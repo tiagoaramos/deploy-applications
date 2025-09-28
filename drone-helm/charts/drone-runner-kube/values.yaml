@@ -139,4 +139,4 @@ env:
   ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-namespace-default/
   ##
   DRONE_NAMESPACE_DEFAULT: drone-space
-  DRONE_RUNNER_VOLUMES: /etc/ssl/certs/harbor-ca.crt:/etc/ssl/certs/harbor-ca.crt:ro
+  DRONE_RUNNER_VOLUMES: /etc/ssl/certs/harbor-ca.crt:/etc/ssl/certs/harbor-ca.crt
