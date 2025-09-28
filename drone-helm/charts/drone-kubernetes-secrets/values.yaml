@@ -7,8 +7,8 @@ image:
 ## of a Kubernetes Secret that contains the needed secret. For more details, see:
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 ##
-imagePullSecrets: []
-# - name: "image-pull-secret"
+imagePullSecrets:
+  - name: harbor-secret
 
 ## For small or experimental deployments of the Kubernetes runner, 1 replica will suffice.
 ## For production cases, 2-3 are recommended. This does not grant additional parallelism,
