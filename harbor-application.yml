@@ -1,0 +1,65 @@
+#######################################
+######    HARBOR APPLICATION     ######
+#######################################
+#-------------------------------------#
+
+apiVersion: argoproj.io/v1alpha1
+
+kind: Application
+
+metadata:
+  name: harbor-registry
+  namespace: argocd
+  ### ATENCAO: o parametro finalizer abaixo deleta todos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: harbor
+  project: default
+  source:
+    repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
+    path: harbor-helm
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+
+
+---
+
+#############################
+########    Ingress   #######
+#############################
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: harbor-ingress
+  namespace: harbor
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: harbor.appwebdiario.com.br
+    http:
+      paths:
+      - backend:
+          service:
+            name: harbor
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
