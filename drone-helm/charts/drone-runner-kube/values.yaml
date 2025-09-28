@@ -78,23 +78,11 @@ affinity: {}
 ## Volumes here per the Pod spec's "volumes" section.
 ## Ref: https://kubernetes.io/docs/concepts/storage/volumes/
 ##
-extraVolumes: 
-  - name: harbor-ca
-    configMap:
-      name: harbor-ca
-  - name: docker-config
-    configMap:
-      name: docker-config
+extraVolumes: []
 ## If you have declared extra volumes, mount them here, per the Pod Container's
 ## "volumeMounts" section.
 ##
-extraVolumeMounts: 
-  - name: harbor-ca
-    mountPath: /etc/ssl/certs/harbor-ca.crt
-    subPath: ca.crt
-  - name: docker-config
-    mountPath: /etc/docker/daemon.json
-    subPath: daemon.json
+extraVolumeMounts: []
 
 ## If you'd like to provide your own Kubernetes Secret object instead of passing your values
 ## in un-encrypted, pass in the name of a created + populated Secret in the same Namespace
