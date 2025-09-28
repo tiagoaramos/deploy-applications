@@ -99,11 +99,17 @@ affinity: {}
 ## Volumes here per the Pod spec's "volumes" section.
 ## Ref: https://kubernetes.io/docs/concepts/storage/volumes/
 ##
-extraVolumes: []
+extraVolumes: 
+  - name: harbor-ca
+    configMap:
+      name: harbor-ca
 ## If you have declared extra volumes, mount them here, per the Pod Container's
 ## "volumeMounts" section.
 ##
-extraVolumeMounts: []
+extraVolumeMounts: 
+  - name: harbor-ca
+    mountPath: /etc/ssl/certs/harbor-ca.crt
+    subPath: ca.crt
 
 persistentVolume:
   ## If you are using SQLite as your DB for Drone, it is recommended to enable persistence. If
