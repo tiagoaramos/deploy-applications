@@ -90,3 +90,11 @@ env:
   ## The Kubernetes namespace to retrieve secrets from.
   ##
   KUBERNETES_NAMESPACE: drone-space
+
+  ## Configure Docker insecure registries for Harbor
+  ## Ref: https://docs.drone.io/installation/reference/drone-docker-config/
+  ##
+  DRONE_DOCKER_CONFIG: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"]
+    }

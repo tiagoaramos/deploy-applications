@@ -15,8 +15,8 @@ image:
 ## of a Kubernetes Secret that contains the needed secret. For more details, see:
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 ##
-imagePullSecrets: []
-# - name: "image-pull-secret"
+imagePullSecrets:
+  - name: harbor-secret
 
 nameOverride: ""
 fullnameOverride: ""
@@ -197,6 +197,14 @@ env:
   DRONE_RPC_SECRET: 09aba6187d905f74987baaae38cff27b  #gerado no seu linux(no meu caso) a partir desse comando: openssl rand -hex 16
   DRONE_USER_CREATE: username:tiagoaramos,admin:true
   DRONE_USER_FILTER: tiagoaramos
+
+  ## Configure Docker insecure registries for Harbor
+  ## Ref: https://docs.drone.io/installation/reference/drone-docker-config/
+  ##
+  DRONE_DOCKER_CONFIG: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"]
+    }
 
   ## If you'd like to use a DB other than SQLite (the default), set a driver + DSN here.
   ## Ref: https://docs.drone.io/installation/storage/database/
