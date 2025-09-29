@@ -1,0 +1,23 @@
+# Certificado TLS Global - EXEMPLO
+# 
+# INSTRUÇÕES:
+# 1. Renomeie este arquivo para tls.crt
+# 2. Substitua o conteúdo pelo seu certificado real
+# 3. Para gerar um certificado de desenvolvimento:
+#    openssl req -x509 -newkey rsa:4096 -keyout tls.key -out tls.crt -days 365 -nodes \
+#      -subj "/C=BR/ST=SP/L=SaoPaulo/O=DevOps/OU=IT/CN=*.local"
+#
+# 4. Para produção, use um certificado válido de uma CA confiável
+#
+# IMPORTANTE: Este é apenas um exemplo. Substitua pelo certificado real!
+
+-----BEGIN CERTIFICATE-----
+# SEU CERTIFICADO REAL AQUI
+# Exemplo de certificado auto-assinado para desenvolvimento:
+# MIIDXTCCAkWgAwIBAgIJAKoK/Ovj8W7PMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+# BAYTAkJSMRMwEQYDVQQIDApTYW9QYXVsbzERMA8GA1UEBwwIU2FvUGF1bG8xDjAM
+# BgNVBAoMBURldk9wczELMAkGA1UECwwCSVQwHhcNMjQwMTAxMDAwMDAwWhcNMjUw
+# MTAxMDAwMDAwWjBFMQswCQYDVQQGEwJCUjETMBEGA1UECAwKU2FvUGF1bG8xETAP
+# BgNVBAcMCFNhb1BhdWxvMQ4wDAYDVQQKDAVEZXZPcHMxCzAJBgNVBAsMAklUMIIB
+# IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+-----END CERTIFICATE-----

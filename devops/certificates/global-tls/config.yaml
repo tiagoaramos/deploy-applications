@@ -1,0 +1,58 @@
+# Configurações do Certificado TLS Global
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-tls-config
+  namespace: default
+data:
+  # Domínios cobertos pelo certificado
+  domains: "appwebdiario.com.br,*.appwebdiario.com.br"
+
+  # Validade do certificado (em dias)
+  validity_days: "5475"  # 15 anos (até 2040)
+
+  # Algoritmo de criptografia
+  algorithm: "RSA"
+
+  # Tamanho da chave
+  key_size: "2048"
+
+  # País
+  country: "US"
+
+  # Estado
+  state: "California"
+
+  # Cidade
+  city: "San Francisco"
+
+  # Organização
+  organization: "CloudFlare, Inc."
+
+  # Unidade organizacional
+  organizational_unit: "CloudFlare Origin CA"
+
+  # Nome comum (CN)
+  common_name: "CloudFlare Origin Certificate"
+
+  # Email
+  email: "admin@appwebdiario.com.br"
+
+  # Informações adicionais
+  certificate_type: "CloudFlare Origin Certificate"
+  issuer: "CloudFlare, Inc."
+  valid_from: "2025-09-19"
+  valid_until: "2040-09-15"
+---
+# Secret para armazenar os certificados
+apiVersion: v1
+kind: Secret
+metadata:
+  name: global-tls-secret
+  namespace: default
+type: kubernetes.io/tls
+data:
+  # Base64 encoded certificate and key
+  # Substitua pelos valores reais em base64
+  tls.crt: ""  # echo -n "certificado" | base64
+  tls.key: ""  # echo -n "chave" | base64

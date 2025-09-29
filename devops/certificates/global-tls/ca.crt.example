@@ -1,0 +1,19 @@
+# Certificado da CA (Certificate Authority) - EXEMPLO
+# 
+# INSTRUÇÕES:
+# 1. Renomeie este arquivo para ca.crt
+# 2. Substitua o conteúdo pelo certificado da CA real
+# 3. Este arquivo é opcional e usado apenas quando você tem uma CA própria
+#
+# IMPORTANTE: Este é apenas um exemplo. Substitua pelo certificado da CA real!
+
+-----BEGIN CERTIFICATE-----
+# CERTIFICADO DA CA REAL AQUI
+# Exemplo de certificado de CA (NÃO USE EM PRODUÇÃO):
+# MIIDXTCCAkWgAwIBAgIJAKoK/Ovj8W7PMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+# BAYTAkJSMRMwEQYDVQQIDApTYW9QYXVsbzERMA8GA1UEBwwIU2FvUGF1bG8xDjAM
+# BgNVBAoMBURldk9wczELMAkGA1UECwwCSVQwHhcNMjQwMTAxMDAwMDAwWhcNMjUw
+# MTAxMDAwMDAwWjBFMQswCQYDVQQGEwJCUjETMBEGA1UECAwKU2FvUGF1bG8xETAP
+# BgNVBAcMCFNhb1BhdWxvMQ4wDAYDVQQKDAVEZXZPcHMxCzAJBgNVBAsMAklUMIIB
+# IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+-----END CERTIFICATE-----

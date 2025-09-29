@@ -6,7 +6,7 @@ metadata:
 data:
   daemon.json: |
     {
-      "insecure-registries": ["harbor.appwebdiario.com.br"],
+      "insecure-registries": [],
       "registry-mirrors": [],
       "log-driver": "json-file",
       "log-opts": {

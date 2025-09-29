@@ -1,51 +1,30 @@
-# PersistentVolumes para dados persistentes dos serviços do cluster
-# Este arquivo define os volumes persistentes que mapeiam para /var/cluster_data/[serviço]
-
----
-# PersistentVolume para ArgoCD Redis
+# PersistentVolumeClaim para Drone CI
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: argocd-redis-pv
+  name: drone-data-pvc
+  namespace: drone-space
 spec:
-  capacity:
-    storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  resources:
+    requests:
+      storage: 8Gi
   storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/argocd/redis
 ---
-# PersistentVolume para ArgoCD Server
+# PersistentVolumeClaim para logs do Drone
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: argocd-server-pv
+  name: drone-logs-pvc
+  namespace: drone-space
 spec:
-  capacity:
-    storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  resources:
+    requests:
+      storage: 2Gi
   storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/argocd/server
----
-# PersistentVolume para ArgoCD Repo Server
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: argocd-repo-server-pv
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/argocd/repo-server
 ---
 # PersistentVolume para Drone Data
 apiVersion: v1
@@ -76,82 +55,6 @@ spec:
   storageClassName: local-storage
   hostPath:
     path: /var/cluster_data/drone/logs
----
-# PersistentVolume para Harbor Registry
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: harbor-registry-pv
-spec:
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/harbor/registry
----
-# PersistentVolume para Harbor Database
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: harbor-database-pv
-spec:
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/harbor/database
----
-# PersistentVolume para Harbor Redis
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: harbor-redis-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/harbor/redis
----
-# PersistentVolume para Harbor Trivy
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: harbor-trivy-pv
-spec:
-  capacity:
-    storage: 5Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/harbor/trivy
----
-# PersistentVolume para Harbor JobService
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: harbor-jobservice-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
-  hostPath:
-    path: /var/cluster_data/harbor/jobservice
-# Site é stateless - não requer PersistentVolumes
 ---
 # StorageClass para volumes locais
 apiVersion: storage.k8s.io/v1

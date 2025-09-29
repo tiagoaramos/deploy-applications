@@ -8,7 +8,6 @@ Os sistemas que requerem persistência têm dados persistentes configurados na p
 
 - **ArgoCD**: `/var/cluster_data/argocd/`
 - **Drone CI**: `/var/cluster_data/drone/`
-- **Harbor**: `/var/cluster_data/harbor/`
 - **Site**: Stateless (não requer persistência)
 
 ## Estrutura Detalhada
@@ -31,15 +30,6 @@ drone/
 └── cache/                   # Cache de dependências e builds
 ```
 
-### Harbor (`/var/cluster_data/harbor/`)
-```
-harbor/
-├── registry/                # Imagens Docker armazenadas
-├── database/                # Banco de dados PostgreSQL do Harbor
-├── redis/                   # Cache Redis do Harbor
-├── trivy/                   # Dados do scanner de vulnerabilidades Trivy
-└── jobservice/              # Logs e dados dos jobs do Harbor
-```
 
 ### Site
 - **Stateless** - Não requer dados persistentes
@@ -107,13 +97,6 @@ Os PersistentVolumes devem ser referenciados nos manifests do Drone:
 - `drone-data-pvc` para dados do banco SQLite
 - `drone-logs-pvc` para logs de builds
 
-### Harbor
-Os PersistentVolumes devem ser referenciados nos manifests do Harbor:
-- `harbor-registry-pvc` para registry de imagens
-- `harbor-database-pvc` para banco PostgreSQL
-- `harbor-redis-pvc` para cache Redis
-- `harbor-trivy-pvc` para scanner Trivy
-- `harbor-jobservice-pvc` para job service
 
 ### Site
 - **Stateless** - Não requer PersistentVolumes
@@ -128,7 +111,6 @@ sudo tar -czf cluster-data-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/
 # Backup específico por serviço
 sudo tar -czf argocd-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/argocd/
 sudo tar -czf drone-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/drone/
-sudo tar -czf harbor-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/harbor/
 ```
 
 ### Restore
@@ -139,7 +121,6 @@ sudo tar -xzf cluster-data-backup-YYYYMMDD.tar.gz -C /
 # Restaurar serviço específico
 sudo tar -xzf argocd-backup-YYYYMMDD.tar.gz -C /
 sudo tar -xzf drone-backup-YYYYMMDD.tar.gz -C /
-sudo tar -xzf harbor-backup-YYYYMMDD.tar.gz -C /
 ```
 
 ## Monitoramento
@@ -159,8 +140,6 @@ kubectl logs -n argocd deployment/argocd-server
 # Logs do Drone
 kubectl logs -n drone-space deployment/uzi-drone-poc
 
-# Logs do Harbor
-kubectl logs -n harbor deployment/harbor-core
 
 # Site é stateless - logs são temporários
 ```
