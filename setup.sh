@@ -12,13 +12,16 @@ minikube start
 echo "🔧 Habilitando addons..."
 minikube addons enable ingress
 
+kubectl create namespace argocd
+kubectl create namespace drone-space
+kubectl create namespace harbor
 kubectl apply -f persistent-volumes.yml
 
 # Conectar rede Docker
 echo "🌐 Conectando rede Docker..."
 docker network connect appwebdiario-network minikube || true
 
-kubectl create namespace argocd
+
 devops/certificates/global-tls/apply-secret.sh argocd
 
 # Instalar ArgoCD via Helm
@@ -36,11 +39,11 @@ kubectl apply -f devops/argocd/argocd-application.yml
 
 # Instalar Drone CI
 echo "🚁 Instalando Drone CI..."
-kubectl create namespace drone-space
+
 devops/certificates/global-tls/apply-secret.sh drone-space
 kubectl apply -f devops/drone/drone-application.yml
 
-kubectl create namespace harbor
+
 devops/certificates/global-tls/apply-secret.sh harbor
 
 helm install harbor harbor/harbor \
@@ -54,6 +57,7 @@ helm install harbor harbor/harbor \
   --set persistence.enabled=true \
   --set persistence.resourcePolicy=keep
 
+echo "⏳ Aguardando Harbor ficar pronto..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=harbor -n harbor --timeout=300s
 
 # Instalar aplicação Site
