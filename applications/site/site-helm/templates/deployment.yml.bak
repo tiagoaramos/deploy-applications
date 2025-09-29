@@ -5,23 +5,23 @@ kind: Deployment
 
 #Dados que ajudam a identificar de forma única o objeto, incluindo uma string nome, UID e um namespace
 metadata:
-  name: site-poc-uzi
+  name: site
 
 #Que estado deseja para o objeto.
 spec:
   selector:
     matchLabels:
-      app: site-poc-uzi
+      app: site
   replicas: 2 # diz ao deployment para executar 2 pods que correspondam ao modelo
   revisionHistoryLimit: 0 #quantos replicaset antigos deve ser mantidos
   template:
     metadata:
       labels:
-        app: site-poc-uzi
+        app: site
     spec:
       containers:
-      - name: site-poc-uzi
+      - name: site
         imagePullPolicy: Always
-        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:b6bdf88
+        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:262916d
         ports:
         - containerPort: 80

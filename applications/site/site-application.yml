@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: site-poc-uzi
+  name: site
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -11,7 +11,7 @@ metadata:
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: uzi-space
+    namespace: site-space
   project: default
   source:
     repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'

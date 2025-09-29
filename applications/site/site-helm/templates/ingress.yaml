@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: uzi-site-ingress
-  namespace: uzi-space
+  name: site-ingress
+  namespace: site-space
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -15,7 +15,7 @@ spec:
       paths:
       - backend:
           service:
-            name: site-poc-uzi
+            name: site
             port:
               number: 80
         path: /
