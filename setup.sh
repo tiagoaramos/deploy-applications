@@ -20,6 +20,8 @@ kubectl create namespace drone-space
 
 kubectl apply -f devops/drone/drone-application.yml
 
-kubectl create secret docker-registry harbor-secret --docker-server=https://harbor.appwebdiario.com.br --docker-username=deployer --docker-password=D3ployer --docker-email=deployer@harbor.appwebdiario.com.br --dry-run=client -o yaml
+# Configurar Harbor secrets e configmaps
+echo "🚀 Configurando Harbor secrets..."
+./devops/harbor/setup-harbor-secrets.sh
 
 kubectl apply -f applications/site/site-application.yml

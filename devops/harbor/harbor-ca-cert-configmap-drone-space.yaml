@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: harbor-ca-cert
-  namespace: harbor
+  namespace: drone-space
 data:
   harbor-ca.crt: |
     -----BEGIN CERTIFICATE-----
