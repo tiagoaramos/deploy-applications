@@ -26,7 +26,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
-    path: drone-helm/charts/drone
+    path: devops/drone/drone-helm/charts/drone
     targetRevision: HEAD
     helm:
       #releaseName: drone-server
@@ -64,7 +64,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
-    path: drone-helm/charts/drone-runner-kube
+    path: devops/drone/drone-helm/charts/drone-runner-kube
     targetRevision: HEAD
     helm:
       #releaseName: drone-runer
@@ -99,7 +99,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
-    path: drone-helm/charts/drone-kubernetes-secrets
+    path: devops/drone/drone-helm/charts/drone-kubernetes-secrets
     targetRevision: HEAD
     helm:
       #releaseName: drone-runer

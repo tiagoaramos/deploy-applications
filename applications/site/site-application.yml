@@ -15,7 +15,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/tiagoaramos/deploy-applications.git'
-    path: site-helm
+    path: applications/site/site-helm
     targetRevision: HEAD
     helm:
       valueFiles:
