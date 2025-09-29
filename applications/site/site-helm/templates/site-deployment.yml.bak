@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+
+#Qual tipo de objeto pretende criar.
+kind: Deployment
+
+#Dados que ajudam a identificar de forma única o objeto, incluindo uma string nome, UID e um namespace
+metadata:
+  name: site
+
+#Que estado deseja para o objeto.
+spec:
+  selector:
+    matchLabels:
+      app: site
+  replicas: 2 # diz ao deployment para executar 2 pods que correspondam ao modelo
+  revisionHistoryLimit: 0 #quantos replicaset antigos deve ser mantidos
+  template:
+    metadata:
+      labels:
+        app: site
+    spec:
+      containers:
+      - name: site
+        imagePullPolicy: Always
+        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:b6bdf88
+        ports:
+        - containerPort: 80
