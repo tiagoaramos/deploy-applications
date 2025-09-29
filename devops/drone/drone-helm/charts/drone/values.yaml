@@ -128,7 +128,7 @@ persistentVolume:
   ## created + ready PVC here. If set, this Chart will not create the default PVC.
   ## Requires server.persistentVolume.enabled: true
   ##
-  existingClaim: ""
+  existingClaim: "drone-data-pvc"
 
   ## Drone server data Persistent Volume mount root path
   ##
@@ -145,7 +145,7 @@ persistentVolume:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: ""
+  storageClass: "local-storage"
 
   ## Drone server data Persistent Volume Binding Mode
   ## If defined, volumeMode: <volumeMode>

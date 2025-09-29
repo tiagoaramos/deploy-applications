@@ -141,19 +141,19 @@ persistence:
     registry:
       # Use the existing PVC which must be created manually before bound,
       # and specify the "subPath" if the PVC is shared with other components
-      existingClaim: ""
+      existingClaim: "harbor-registry-pvc"
       # Specify the "storageClass" used to provision the volume. Or the default
       # StorageClass will be used (the default).
       # Set it to "-" to disable dynamic provisioning
-      storageClass: ""
+      storageClass: "local-storage"
       subPath: ""
       accessMode: ReadWriteOnce
-      size: 5Gi
+      size: 50Gi
       annotations: {}
     jobservice:
       jobLog:
-        existingClaim: ""
-        storageClass: ""
+        existingClaim: "harbor-jobservice-pvc"
+        storageClass: "local-storage"
         subPath: ""
         accessMode: ReadWriteOnce
         size: 1Gi
@@ -161,24 +161,24 @@ persistence:
     # If external database is used, the following settings for database will
     # be ignored
     database:
-      existingClaim: ""
-      storageClass: ""
+      existingClaim: "harbor-database-pvc"
+      storageClass: "local-storage"
       subPath: ""
       accessMode: ReadWriteOnce
-      size: 1Gi
+      size: 5Gi
       annotations: {}
     # If external Redis is used, the following settings for Redis will
     # be ignored
     redis:
-      existingClaim: ""
-      storageClass: ""
+      existingClaim: "harbor-redis-pvc"
+      storageClass: "local-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
       annotations: {}
     trivy:
-      existingClaim: ""
-      storageClass: ""
+      existingClaim: "harbor-trivy-pvc"
+      storageClass: "local-storage"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi

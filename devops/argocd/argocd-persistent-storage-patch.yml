@@ -1,0 +1,60 @@
+# Patch para adicionar armazenamento persistente ao ArgoCD
+# Este arquivo deve ser aplicado após a instalação do ArgoCD
+
+---
+# Patch para Redis do ArgoCD
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-redis
+  namespace: argocd
+spec:
+  template:
+    spec:
+      containers:
+      - name: redis
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: argocd-redis-pvc
+---
+# Patch para Server do ArgoCD
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        volumeMounts:
+        - name: server-data
+          mountPath: /app/config
+      volumes:
+      - name: server-data
+        persistentVolumeClaim:
+          claimName: argocd-server-pvc
+---
+# Patch para Repo Server do ArgoCD
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+  namespace: argocd
+spec:
+  template:
+    spec:
+      containers:
+      - name: repo-server
+        volumeMounts:
+        - name: repo-server-data
+          mountPath: /tmp
+      volumes:
+      - name: repo-server-data
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-pvc
