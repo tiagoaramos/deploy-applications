@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drone-runer-drone-runner-kube
+  namespace: drone-space
+data:
+  DRONE_RPC_SECRET: "09aba6187d905f74987baaae38cff27b"
+  DRONE_LOGS_TRACE: "true"
+  DRONE_RPC_HOST: "drone"
+  DRONE_RPC_PROTO: "http"
+  DRONE_NAMESPACE_DEFAULT: "drone-space"
+  DRONE_POD_ANNOTATIONS: |
+    harbor-ca-cert: "harbor-ca-cert"
+  DRONE_POD_SPEC: |
+    imagePullSecrets:
+    - name: harbor-secret
+    volumes:
+    - name: harbor-ca-cert
+      configMap:
+        name: harbor-ca-cert
+    - name: docker-daemon-config
+      configMap:
+        name: docker-daemon-config
+    containers:
+    - volumeMounts:
+      - name: harbor-ca-cert
+        mountPath: /etc/ssl/certs/harbor-ca.crt
+        subPath: harbor-ca.crt
+        readOnly: true
+      - name: docker-daemon-config
+        mountPath: /etc/docker/daemon.json
+        subPath: daemon.json
+        readOnly: true
+  DRONE_DOCKER_CONFIG: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"]
+    }
+  DRONE_DOCKER_CONFIG_PATH: "/etc/docker/daemon.json"
