@@ -22,6 +22,6 @@ spec:
       containers:
       - name: site-poc-uzi
         imagePullPolicy: Always
-        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:262916d
+        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:b6bdf88
         ports:
         - containerPort: 80
