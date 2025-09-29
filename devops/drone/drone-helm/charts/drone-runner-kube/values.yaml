@@ -129,7 +129,7 @@ env:
   ## service that the drone server Chart creates by default.
   ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-host/
   ##
-  DRONE_RPC_HOST: uzi-drone-poc
+  DRONE_RPC_HOST: drone
 
   ## The protocol to use for communication with Drone server.
   ## Ref: https://kube-runner.docs.drone.io/installation/reference/drone-rpc-proto/

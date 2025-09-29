@@ -13,7 +13,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: uzi-drone-poc
+  name: drone
   namespace: argocd
   ### ATENCAO: o parametro finalizer abaixo deleta todos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
   finalizers:
@@ -51,7 +51,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: uzi-drone-runer-poc
+  name: drone-runer
   namespace: argocd
   ### ATENCAO: o parametro finalizer abaixo deleta todos os pods e namespace criada pelo arquivo application.yml quando usado o comando kubectl delete application.yml
   finalizers:
@@ -135,7 +135,7 @@ spec:
       paths:
       - backend:
           service:
-            name: uzi-drone-poc
+            name: drone
             port:
               number: 80
         path: /

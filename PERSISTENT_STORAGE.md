@@ -138,7 +138,7 @@ df -h /var/cluster_data
 kubectl logs -n argocd deployment/argocd-server
 
 # Logs do Drone
-kubectl logs -n drone-space deployment/uzi-drone-poc
+kubectl logs -n drone-space deployment/drone
 
 
 # Site é stateless - logs são temporários
