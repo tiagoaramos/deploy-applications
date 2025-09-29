@@ -22,6 +22,6 @@ spec:
       containers:
       - name: site
         imagePullPolicy: Always
-        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:b6bdf88
+        image: harbor.appwebdiario.com.br/appwebdiario/poc-site:c6ab222
         ports:
         - containerPort: 80
