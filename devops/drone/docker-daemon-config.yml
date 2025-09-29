@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-daemon-config
+  namespace: drone-space
+data:
+  daemon.json: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"],
+      "registry-mirrors": []
+    }

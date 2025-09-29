@@ -14,6 +14,7 @@ Repositório para deploy de aplicações pelo Argo CD
 - **IP Minikube:** `192.168.49.2:80`
 - **Namespace:** `drone-space`
 - **Ingress:** `drone-ingress`
+- **Autenticação Harbor:** Configurada com usuário `deployer` e senha `D3ployer`
 
 
 ### Site
@@ -81,6 +82,26 @@ kubectl apply -f applications/site/site-application.yml
 
 ## Scripts Disponíveis
 
-- `setup.sh` - Script principal de configuração do cluster
+### Setup Principal
+- `setup.sh` - Script principal de configuração do cluster (inclui Harbor)
+- `setup-complete-with-harbor.sh` - Setup completo com verificação adicional
+- `devops/setup.sh` - Setup alternativo do devops
+
+### Dados Persistentes
 - `setup-cluster-data.sh` - Configura estrutura de dados persistentes
 - `apply-persistent-storage.sh` - Aplica PersistentVolumes e PVCs
+
+### Scripts do Drone com Harbor
+- `devops/drone/apply-harbor-auth.sh` - Aplica configurações de autenticação do Harbor
+- `devops/drone/deploy-drone-with-harbor.sh` - Deploy completo do Drone com Harbor
+- `devops/drone/verify-harbor-auth.sh` - Verifica configuração de autenticação
+
+## Setup Rápido
+
+```bash
+# Setup completo com Harbor integrado
+./setup-complete-with-harbor.sh
+
+# Ou setup manual
+./setup.sh
+```
