@@ -59,8 +59,9 @@ affinity: {}
 ## as the pod. All secrets within this configmap will be mounted as environment variables,
 ## with each key/value mapping to a corresponding environment variable on the pod.
 ##
-extraSecretNamesForEnvFrom: []
-# - my-drone-secrets
+extraSecretNamesForEnvFrom:
+  - docker-registry
+  - global-tls-secret
 
 rbac:
   ## If true, create a Role + Rolebinding in the secretNamespace that allows the extension to

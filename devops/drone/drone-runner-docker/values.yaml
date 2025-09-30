@@ -51,6 +51,9 @@ dind:
   ## If you have declared extra volumes, mount them here, per the Pod Container's
   ## "volumeMounts" section of dind container
   ##
+
+  imagePullSecrets:
+    - name: docker-registry
   extraVolumeMounts:
     - name: storage
       mountPath: /var/lib/docker
@@ -156,10 +159,10 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: global-tls-secret
+      hosts:
+        - drone.appwebdiario.com.br
 
 resources:
   {}
@@ -193,7 +196,8 @@ affinity: {}
 ## variables, with each key/value mapping to a corresponding environment variable on the
 ## Docker runner.
 ##
-extraSecretNamesForEnvFrom: []
+extraSecretNamesForEnvFrom:
+  - docker-registry
 # - my-drone-secrets
 
 ## The keys within the "env" map are mounted as environment variables on the Kubernetes runner pod.

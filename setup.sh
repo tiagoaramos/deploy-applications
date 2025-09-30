@@ -40,14 +40,14 @@ kubectl apply -f devops/argocd/argocd-application.yml
 
 devops/certificates/global-tls/apply-secret.sh harbor
 
-helm install harbor harbor/harbor \
+helm upgrade harbor harbor/harbor \
   --namespace harbor \
   --set expose.ingress.hosts.core=harbor.appwebdiario.com.br \
   --set externalURL=https://harbor.appwebdiario.com.br \
   --set harborAdminPassword="Harbor12345" \
-  --set tls.enabled=true \
-  --set tls.certSource=auto \
-  --set tls.secret.secretName=global-tls-secret \
+  --set expose.tls.enabled=true \
+  --set expose.tls.certSource=secret \
+  --set expose.tls.secret.secretName=global-tls-secret \
   --set persistence.enabled=true \
   --set persistence.resourcePolicy=keep
 
@@ -61,13 +61,13 @@ kubectl create secret docker-registry docker-registry \
   --docker-username=deployer \
   --docker-password=D3ployer \
   --docker-email=deployer@appwebdiario.com.br \
-  --namespace default
+  --namespace drone
 
 
 devops/certificates/global-tls/apply-secret.sh drone
 
 helm install --namespace drone drone drone/drone -f devops/drone/drone/values.yaml
-helm install --namespace drone drone-runner-docker drone/drone-runner-docker -f devops/drone/drone-runner-docker/values.yaml
+helm install --namespace drone drone-runner-kubernetes drone/drone-runner-kubernetes -f devops/drone/drone-runner-kubernetes/values.yaml
 helm install --namespace drone drone-kubernetes-secrets drone/drone-kubernetes-secrets -f devops/drone/drone-kubernetes-secrets/values.yaml
 
 echo "⏳ Aguardando Drone ficar pronto..."
