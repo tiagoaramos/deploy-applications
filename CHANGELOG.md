@@ -6,7 +6,6 @@
 
 #### 1. Integração de PVCs por Módulo
 - **ArgoCD**: PVCs integrados em `devops/argocd/argocd-pvc.yml`
-- **Drone CI**: PVCs integrados em `devops/drone/drone-pvc.yml` e `values.yaml` atualizado
 - **Site**: Removido (stateless - não requer persistência)
 
 #### 2. Arquivos Criados/Modificados
@@ -14,10 +13,8 @@
 **Novos Arquivos:**
 - `devops/argocd/argocd-pvc.yml` - PVCs específicos do ArgoCD
 - `devops/argocd/argocd-persistent-storage-patch.yml` - Patch para ArgoCD
-- `devops/drone/drone-pvc.yml` - PVCs específicos do Drone
 
 **Arquivos Modificados:**
-- `devops/drone/drone-helm/charts/drone/values.yaml` - Configurado para usar PVCs específicos
 - `applications/site/site-helm/templates/site-deployment.yml` - Revertido para stateless
 - `setup.sh` - Atualizado para aplicar PVCs específicos
 - `apply-persistent-storage.sh` - Atualizado para aplicar PVCs por módulo
@@ -37,10 +34,6 @@
 │   ├── repo-server/           # Cache de repositórios Git
 │   ├── dex-server/            # Servidor de autenticação
 │   └── application-controller/ # Controlador de aplicações
-├── drone/                     # Drone CI
-│   ├── data/                 # Banco SQLite
-│   ├── logs/                 # Logs de builds
-│   └── cache/                # Cache de dependências
 ```
 
 #### 4. Configurações por Serviço
@@ -50,9 +43,6 @@
 - `argocd-server-pvc` (1Gi) - Dados do servidor
 - `argocd-repo-server-pvc` (2Gi) - Cache de repositórios
 
-**Drone CI:**
-- `drone-data-pvc` (8Gi) - Banco SQLite
-- `drone-logs-pvc` (2Gi) - Logs de builds
 
 
 **Site:**
@@ -62,7 +52,7 @@
 
 **`setup.sh`:**
 - Aplica PVCs específicos antes de cada serviço
-- Ordem: ArgoCD → Drone → Site
+- Ordem: ArgoCD → Site
 
 **`apply-persistent-storage.sh`:**
 - Aplica PVCs por módulo específico

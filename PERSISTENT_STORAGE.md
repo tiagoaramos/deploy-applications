@@ -7,7 +7,6 @@ Este documento descreve como configurar e usar os dados persistentes para todos 
 Os sistemas que requerem persistência têm dados persistentes configurados na pasta `/var/cluster_data/[nome-do-serviço]`:
 
 - **ArgoCD**: `/var/cluster_data/argocd/`
-- **Drone CI**: `/var/cluster_data/drone/`
 - **Site**: Stateless (não requer persistência)
 
 ## Estrutura Detalhada
@@ -22,13 +21,6 @@ argocd/
 └── application-controller/   # Dados do controlador de aplicações
 ```
 
-### Drone CI (`/var/cluster_data/drone/`)
-```
-drone/
-├── data/                    # Banco de dados SQLite do Drone
-├── logs/                    # Logs de execução dos builds
-└── cache/                   # Cache de dependências e builds
-```
 
 
 ### Site
@@ -92,10 +84,6 @@ Os PersistentVolumes devem ser referenciados nos manifests do ArgoCD:
 - `argocd-server-pvc` para Server
 - `argocd-repo-server-pvc` para Repo Server
 
-### Drone CI
-Os PersistentVolumes devem ser referenciados nos manifests do Drone:
-- `drone-data-pvc` para dados do banco SQLite
-- `drone-logs-pvc` para logs de builds
 
 
 ### Site
@@ -110,7 +98,6 @@ sudo tar -czf cluster-data-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/
 
 # Backup específico por serviço
 sudo tar -czf argocd-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/argocd/
-sudo tar -czf drone-backup-$(date +%Y%m%d).tar.gz /var/cluster_data/drone/
 ```
 
 ### Restore
@@ -120,7 +107,6 @@ sudo tar -xzf cluster-data-backup-YYYYMMDD.tar.gz -C /
 
 # Restaurar serviço específico
 sudo tar -xzf argocd-backup-YYYYMMDD.tar.gz -C /
-sudo tar -xzf drone-backup-YYYYMMDD.tar.gz -C /
 ```
 
 ## Monitoramento
@@ -137,8 +123,6 @@ df -h /var/cluster_data
 # Logs do ArgoCD
 kubectl logs -n argocd deployment/argocd-server
 
-# Logs do Drone
-kubectl logs -n drone-space deployment/drone
 
 
 # Site é stateless - logs são temporários

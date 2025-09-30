@@ -1,3 +1,0 @@
-# This values file is used during CI tests.
-env:
-  SECRET_KEY: test-secret

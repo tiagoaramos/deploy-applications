@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: docker-daemon-config
-  namespace: drone-space
+  namespace: default
 data:
   daemon.json: |
     {

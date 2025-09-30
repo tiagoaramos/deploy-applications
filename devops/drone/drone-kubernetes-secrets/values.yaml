@@ -1,4 +1,5 @@
 image:
+  registry: docker.io
   repository: drone/kubernetes-secrets
   tag: latest
   pullPolicy: IfNotPresent
@@ -8,7 +9,7 @@ image:
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 ##
 imagePullSecrets:
-  - name: harbor-secret
+  - name: docker-registry
 
 ## For small or experimental deployments of the Kubernetes runner, 1 replica will suffice.
 ## For production cases, 2-3 are recommended. This does not grant additional parallelism,
@@ -70,7 +71,7 @@ rbac:
   ## rbac.restrictToSecrets is set below, the extension will be able to pull all secrets in
   ## the namespace specified here.
   ##
-  secretNamespace: default
+  secretNamespace: drone
   ## Optionally restrict secret pulls to a subset of secrets in the secret namespace. This is
   ## particularly useful if your secrets extension is fetching secrets from a namespace that other
   ## Drone components have been deployed to.
@@ -85,16 +86,8 @@ env:
   ## This is commented out in order to leave you the ability to set the
   ## key via a separately provisioned secret (see existingSecretName above).
   ##
-  SECRET_KEY: 09aba6187d905f74987baaae38cff27b  #gerado no seu linux(no meu caso) a partir desse comando: openssl rand -hex 16 mesmo configurado no values do drone server
+  SECRET_KEY: 367a8125f62e51bf2d979b17acf359fd
 
   ## The Kubernetes namespace to retrieve secrets from.
   ##
-  KUBERNETES_NAMESPACE: drone-space
-
-  ## Configure Docker insecure registries for Harbor
-  ## Ref: https://docs.drone.io/installation/reference/drone-docker-config/
-  ##
-  DRONE_DOCKER_CONFIG: |
-    {
-      "insecure-registries": ["harbor.appwebdiario.com.br"]
-    }
+  KUBERNETES_NAMESPACE: drone

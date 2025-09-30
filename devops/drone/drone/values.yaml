@@ -6,17 +6,17 @@ hostAliases: []
   #   - gitea-127.0.0.1.sslip.io
 
 image:
+  registry: docker.io
   repository: drone/drone
   tag: 2.12.1
   pullPolicy: IfNotPresent
-
 
 ## If you need to pull images from a private Docker image repository, pass in the name
 ## of a Kubernetes Secret that contains the needed secret. For more details, see:
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 ##
 imagePullSecrets:
-  - name: harbor-secret
+  - name: docker-registry
 
 nameOverride: ""
 fullnameOverride: ""
@@ -55,7 +55,7 @@ updateStrategy: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
   annotations: {}
   nodePort:
 
@@ -64,7 +64,8 @@ service:
 ## that is specific to their ingress implementation.
 ## Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: false
+  enabled: true
+  className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -104,6 +105,9 @@ extraVolumes: []
 ## "volumeMounts" section.
 ##
 extraVolumeMounts: []
+## If you would like to add additional containers to the deployment, declare them here.
+##
+extraContainers: []
 
 persistentVolume:
   ## If you are using SQLite as your DB for Drone, it is recommended to enable persistence. If
@@ -128,7 +132,7 @@ persistentVolume:
   ## created + ready PVC here. If set, this Chart will not create the default PVC.
   ## Requires server.persistentVolume.enabled: true
   ##
-  existingClaim: "drone-data-pvc"
+  existingClaim: ""
 
   ## Drone server data Persistent Volume mount root path
   ##
@@ -145,7 +149,7 @@ persistentVolume:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "local-storage"
+  storageClass: ""
 
   ## Drone server data Persistent Volume Binding Mode
   ## If defined, volumeMode: <volumeMode>
@@ -183,7 +187,7 @@ env:
   ## REQUIRED: Set the user-visible Drone hostname, sans protocol.
   ## Ref: https://docs.drone.io/installation/reference/drone-server-host/
   ##
-  DRONE_SERVER_HOST: drone.appwebdiario.com.br
+  DRONE_SERVER_HOST: "drone.appwebdiario.com.br"
   ## The protocol to pair with the value in DRONE_SERVER_HOST (http or https).
   ## Ref: https://docs.drone.io/installation/reference/drone-server-proto/
   ##
@@ -194,17 +198,7 @@ env:
   ## key via a separately provisioned secret (see existingSecretName above).
   ## Ref: https://docs.drone.io/installation/reference/drone-rpc-secret/
   ##
-  DRONE_RPC_SECRET: 09aba6187d905f74987baaae38cff27b  #gerado no seu linux(no meu caso) a partir desse comando: openssl rand -hex 16
-  DRONE_USER_CREATE: username:tiagoaramos,admin:true
-  DRONE_USER_FILTER: tiagoaramos
-
-  ## Configure Docker insecure registries for Harbor
-  ## Ref: https://docs.drone.io/installation/reference/drone-docker-config/
-  ##
-  DRONE_DOCKER_CONFIG: |
-    {
-      "insecure-registries": ["harbor.appwebdiario.com.br"]
-    }
+  DRONE_RPC_SECRET: 367a8125f62e51bf2d979b17acf359fd
 
   ## If you'd like to use a DB other than SQLite (the default), set a driver + DSN here.
   ## Ref: https://docs.drone.io/installation/storage/database/
@@ -236,8 +230,19 @@ env:
   ## Ref: https://docs.drone.io/installation/providers/github/
   ##
   DRONE_GITHUB_CLIENT_ID: Ov23liMmunkIfOfcGd9b   #git ID gerado em: Settings > Developer settings  > OAuth Apps
-
   DRONE_GITHUB_CLIENT_SECRET: a4568df90af0c46ec038b96489bf52747870ce37  #git secret gerado em: Settings > Developer settings  > OAuth Apps
+
+  DRONE_USER_CREATE: username:tiagoaramos,admin:true
+  DRONE_USER_FILTER: tiagoaramos
+
+
+  ## Configure Docker insecure registries for Harbor
+  ## Ref: https://docs.drone.io/installation/reference/drone-docker-config/
+  ##
+  DRONE_DOCKER_CONFIG: |
+    {
+      "insecure-registries": ["harbor.appwebdiario.com.br"]
+    }
 
   ## GitLab-specific variables. See the provider docs here:
   ## Ref: https://docs.drone.io/installation/providers/gitlab/

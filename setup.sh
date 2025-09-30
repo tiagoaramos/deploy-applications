@@ -13,8 +13,8 @@ echo "🔧 Habilitando addons..."
 minikube addons enable ingress
 
 kubectl create namespace argocd
-kubectl create namespace drone-space
 kubectl create namespace harbor
+kubectl create namespace drone
 kubectl apply -f persistent-volumes.yml
 
 # Conectar rede Docker
@@ -34,9 +34,9 @@ kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -
 
 # Mostrar senha do ArgoCD
 echo "🔑 Senha do ArgoCD:"
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+argocd_password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+echo $argocd_password
 kubectl apply -f devops/argocd/argocd-application.yml
-
 
 devops/certificates/global-tls/apply-secret.sh harbor
 
@@ -54,71 +54,80 @@ helm install harbor harbor/harbor \
 echo "⏳ Aguardando Harbor ficar pronto..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=harbor -n harbor --timeout=300s
 
+# Instalar aplicação drone
 
-# Instalar Drone CI
-echo "🚁 Instalando Drone CI..."
+kubectl create secret docker-registry docker-registry \
+  --docker-server=harbor.appwebdiario.com.br \
+  --docker-username=deployer \
+  --docker-password=D3ployer \
+  --docker-email=deployer@appwebdiario.com.br \
+  --namespace default
 
-devops/certificates/global-tls/apply-secret.sh drone-space
 
-# Aplicar configurações de autenticação do Harbor para o Drone
-echo "🔐 Configurando autenticação do Drone com Harbor..."
-cd devops/drone
-./apply-harbor-auth.sh
+devops/certificates/global-tls/apply-secret.sh drone
 
-# Aguardar recursos serem criados
-echo "⏳ Aguardando recursos do Harbor serem criados..."
-sleep 5
+helm install --namespace drone drone drone/drone -f devops/drone/drone/values.yaml
+helm install --namespace drone drone-runner-docker drone/drone-runner-docker -f devops/drone/drone-runner-docker/values.yaml
+helm install --namespace drone drone-kubernetes-secrets drone/drone-kubernetes-secrets -f devops/drone/drone-kubernetes-secrets/values.yaml
 
-# Deploy do Drone Server
-echo "🚀 Deploy do Drone Server..."
-helm upgrade --install drone ./drone-helm/charts/drone \
-    -f ./drone-helm/charts/drone/values.yaml \
-    --namespace drone-space \
-    --create-namespace
-
-# Aguardar o Drone Server ficar pronto
-echo "⏳ Aguardando Drone Server ficar pronto..."
-kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=drone -n drone-space --timeout=300s
-
-# Deploy do Drone Runner
-echo "🏃 Deploy do Drone Runner..."
-helm upgrade --install drone-runner-kube ./drone-helm/charts/drone-runner-kube \
-    -f ./drone-helm/charts/drone-runner-kube/values.yaml \
-    --namespace drone-space
-
-# Aguardar o Drone Runner ficar pronto
-echo "⏳ Aguardando Drone Runner ficar pronto..."
-kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=drone-runner-kube -n drone-space --timeout=300s
-
-cd ../..
-
-# Aplicar aplicação do Drone no ArgoCD
-kubectl apply -f devops/drone/drone-application.yml
+echo "⏳ Aguardando Drone ficar pronto..."
+kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=drone -n drone --timeout=300s
 
 
 
-# Instalar aplicação Site
+curl -X 'POST' \
+  'https://harbor.appwebdiario.com.br/api/v2.0/projects' \
+  -H 'accept: application/json' \
+  -H 'authorization: Basic YWRtaW46SGFyYm9yMTIzNDU=' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "project_name": "appwebdiario",
+    "public": false,
+    "metadata": {
+        "public": "false",
+        "enable_content_trust": "false",
+        "enable_content_trust_cosign": "false"
+    },
+    "storage_limit": 0
+}
+'
+curl -X 'POST' \
+  'https://harbor.appwebdiario.com.br/api/v2.0/users' \
+  -H 'accept: application/json' \
+  -H 'authorization: Basic YWRtaW46SGFyYm9yMTIzNDU=' \
+  -H 'Content-Type: application/json' \
+  -H 'X-Harbor-CSRF-Token: XNRs5dz5Mkrju8/R7g32cgZK8nWmNjzBWJxwrUKYnvMPXHmbrpHBFKOplfsCqr1LCQcxgS+XecGzNsYniKfUog==' \
+  -d '{
+  "email": "deployer@appwebdiario.com.br",
+  "realname": "Deployer",
+  "comment": "deployer",
+  "password": "D3ployer",
+  "username": "deployer"
+}'
 
-# Verificação final do Drone com Harbor
-echo "🔍 Verificando configuração do Drone com Harbor..."
-cd devops/drone
-./verify-harbor-auth.sh
-cd ../..
+curl -X 'PUT' \
+  'https://harbor.appwebdiario.com.br/api/v2.0/users/3/sysadmin' \
+  -H 'accept: application/json' \
+  -H 'authorization: Basic YWRtaW46SGFyYm9yMTIzNDU=' \
+  -H 'Content-Type: application/json' \
+  -H 'X-Harbor-CSRF-Token: vfJQjYow9YNyg9EuCiKTy3KzlOc8XOukBxT4FQ+jKp7uekXz+FgG3TKRiwTmhdjyff5XE7X9rqTsvk6fxZxgzw==' \
+  -d '{
+  "sysadmin_flag": true
+}'
+
+docker push harbor.appwebdiario.com.br/appwebdiario/docker-build:latest
+docker push harbor.appwebdiario.com.br/appwebdiario/pipeline-base-module:latest
 
 echo "✅ Setup concluído com sucesso!"
-echo ""
-echo "📋 Serviços disponíveis:"
-echo "- ArgoCD: kubectl port-forward svc/argocd-server -n argocd 8080:443"
-echo "- Drone: kubectl port-forward svc/drone -n drone-space 8081:80"
-echo "- Harbor: kubectl port-forward svc/harbor -n harbor 8082:80"
+echo "🔐 Configuração ArgoCD:"
+echo "- URL: https://argocd.appwebdiario.com.br"
+echo "- Usuário: admin"
+echo "- Senha: $argocd_password"
 echo ""
 echo "🔐 Configuração Harbor:"
+echo "- URL: https://harbor.appwebdiario.com.br"
 echo "- Usuário: deployer"
 echo "- Senha: D3ployer"
-echo "- Registry: harbor.appwebdiario.com.br"
 echo ""
-echo "🔍 Verificar status:"
-echo "- kubectl get pods --all-namespaces"
-echo "- kubectl get pvc --all-namespaces"
-echo "- kubectl get pv"
-echo "- kubectl get secrets,configmaps -n drone-space | grep harbor"
+echo "🔐 Configuração Drone:"
+echo "- URL: https://drone.appwebdiario.com.br"
