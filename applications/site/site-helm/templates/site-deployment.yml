@@ -26,8 +26,7 @@ spec:
         ports:
         - containerPort: 80
         envFrom:
-        - name: site-config
-          configMapKeyRef:
+        - configMapRef:
             name: site-config
         livenessProbe:
           httpGet:
