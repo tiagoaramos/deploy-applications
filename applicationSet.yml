@@ -1,0 +1,27 @@
+    apiVersion: argoproj.io/v1alpha1
+    kind: ApplicationSet
+    metadata:
+      name: my-appset
+    spec:
+      generators:
+        - git:
+            repoURL: https://github.com/tiagoaramos/deploy-applications.git
+            revision: HEAD
+            directories:
+              - path: applications/* # This will scan all subdirectories within 'apps/'
+      template:
+        metadata:
+          name: '{{.path.basename}}-app' # Generates application names based on directory names
+        spec:
+          project: default
+          source:
+            repoURL: https://github.com/tiagoaramos/deploy-applications.git
+            revision: HEAD
+            path: '{{.path}}' # Points to the specific subdirectory found by the generator
+          destination:
+            server: https://kubernetes.default.svc
+            namespace: default
+          syncPolicy:
+            automated:
+              prune: true
+              selfHeal: true
