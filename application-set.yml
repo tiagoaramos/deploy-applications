@@ -30,5 +30,10 @@ spec:
               server: 'https://kubernetes.default.svc'
               namespace: '{{.path.basename}}'
           syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+                allowEmpty: true
               syncOptions:
-              - CreateNamespace=true
+                - CreateNamespace=true
+                - PruneLast=true
