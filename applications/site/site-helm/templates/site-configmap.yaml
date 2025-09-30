@@ -6,4 +6,5 @@ metadata:
   labels:
     app: site
 data:
-
+  SPRING_PROFILES_ACTIVE: "production"
+  LOG_LEVEL: "INFO"
