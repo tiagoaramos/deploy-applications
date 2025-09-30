@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: uzi-site-ingress
+  namespace: site-space
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: site.appwebdiario.com.br
+    http:
+      paths:
+      - backend:
+          service:
+            name: site
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: site.appwebdiario.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: site
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
