@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: harbor.appwebdiario.com.br/appwebdiario/site
-  tag: "1dbab81"
+  tag: "9af9c6e"
   pullPolicy: IfNotPresent
 
 service:
