@@ -22,11 +22,13 @@ spec:
       containers:
       - name: site
         imagePullPolicy: Always
-        image: harbor.appwebdiario.com.br/appwebdiario/site:a4c9876
+        image: harbor.appwebdiario.com.br/appwebdiario/site:1dbab81
         ports:
         - containerPort: 80
-        env:
-
+        envFrom:
+        - name: site-config
+          configMapKeyRef:
+            name: site-config
         livenessProbe:
           httpGet:
             path: /
